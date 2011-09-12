@@ -19,27 +19,27 @@ TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	bin
 SOURCES		:=	src
 DATA		:=	data  
-INCLUDES	:=
+INCLUDES	:= /usr/local/xenon/usr/include
 
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
 
-CFLAGS	= -ffunction-sections -fdata-sections -g -O2 -Wall $(MACHDEP) $(INCLUDE)
-CXXFLAGS	=	$(CFLAGS)
+CFLAGS = -ffunction-sections -fdata-sections -g -O2 -Wall $(MACHDEP) $(INCLUDE)
+CXXFLAGS = $(CFLAGS)
 
-LDFLAGS	=	-g $(MACHDEP) -Wl,--gc-sections -Wl,-Map,$(notdir $@).map
+LDFLAGS	= -g $(MACHDEP) -Wl,--gc-sections -Wl,-Map,$(notdir $@).map
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lxenon -lm
+LIBS := -lSDL -lxenon -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=
+LIBDIRS	:= 
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
