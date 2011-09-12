@@ -1,6 +1,8 @@
 #ifndef CHIP8_H
 #define CHIP8_H
 
+#include "types.h"
+
 // -----------------------------------------------
 // memory map
 // -----------------------------------------------
@@ -9,18 +11,7 @@
 #define FONT_START_ADDR 0x050
 #define FONT_END_ADDR 0x0A0
 #define INTERPRETER_END_ADDR 0x1ff
-
-// -----------------------------------------------
-// types
-// -----------------------------------------------
-
-// general
-typedef unsigned short ushort;
-typedef unsigned char uchar;
-
-// chip-8 specific
-typedef ushort opcode;
-typedef uchar byte;
+#define PROGRAM_START_ADDR 0x200
 
 // -----------------------------------------------
 // system
@@ -52,5 +43,11 @@ uchar key[16];
 // timers
 uchar delay_timer;
 uchar sound_timer;
+
+// -----------------------------------------------
+// function declarations
+// -----------------------------------------------
+void chip8_init();
+
 
 #endif // CHIP8_H
