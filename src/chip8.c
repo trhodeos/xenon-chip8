@@ -1,6 +1,8 @@
 #include "chip8.h"
 #include "util.h"
 
+#include <console/console.h>
+
 // for memset
 #include <string.h>
 
@@ -31,6 +33,8 @@ void load_rom(const char* file) {
 
 void emulate_cycle() {
 
+  ushort x, y, height, pixel, xline, yline;
+
   // Fetch
   // opcodes are 2 bytes, not 1
   ushort opcode = memory[pc] << 8 | memory[pc+1];
@@ -42,11 +46,9 @@ void emulate_cycle() {
       pc +=2;
       break;
     case 0xD000: // DXYN: Draws *I to (X,Y) with height N
-      ushort x = V[(opcode & 0x0F00) >> 8];
-      ushort y = V[(opcode & 0x0F00) >> 4];
-      ushort height = opcode & 0x000F;
-      ushort pixel;
-      ushort xline, yline;
+      x = V[(opcode & 0x0F00) >> 8];
+      y = V[(opcode & 0x0F00) >> 4];
+      height = opcode & 0x000F;
 
       V[0xF] = 0;
       for (yline = 0; yline < height; yline++) {
@@ -64,10 +66,10 @@ void emulate_cycle() {
       draw_flag = 1;
       pc += 2;
       break;
-      }
 
     default:
-      printf("%s: Opcode 0x%x not yet implemented\n", __FILE__, opcode);
+      break;
+      //      printf("%s: Opcode 0x%x not yet implemented\n", __FILE__, opcode);
   }
 
   if (delay_timer > 0)
@@ -75,7 +77,7 @@ void emulate_cycle() {
   
   if (sound_timer > 0) {
     if (sound_timer == 1) {
-      printf("BEEP\n");
+      //      printf("BEEP\n");
     }
     sound_timer--;
   }
