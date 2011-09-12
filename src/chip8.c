@@ -28,3 +28,55 @@ void chip8_init() {
 void load_rom(const char* file) {
   memread(&memory[PROGRAM_START_ADDR], file);
 }
+
+void emulate_cycle() {
+
+  // Fetch
+  // opcodes are 2 bytes, not 1
+  ushort opcode = memory[pc] << 8 | memory[pc+1];
+
+  // Decode
+  switch(opcode & 0xF000) {
+    case 0xA000: // ANNN: Sets I to the address 0xNNN
+      I = opcode & 0x0FFF;
+      pc +=2;
+      break;
+    case 0xD000: // DXYN: Draws *I to (X,Y) with height N
+      ushort x = V[(opcode & 0x0F00) >> 8];
+      ushort y = V[(opcode & 0x0F00) >> 4];
+      ushort height = opcode & 0x000F;
+      ushort pixel;
+      ushort xline, yline;
+
+      V[0xF] = 0;
+      for (yline = 0; yline < height; yline++) {
+        pixel = memory[I + yline];
+        for (xline = 0; xline < 8; xline++) {
+          if ((pixel & (0x80 >> xline)) != 0) {
+            if (gfx[(x + xline + ((y + yline) * 64))] == 1) {
+              V[0xF] = 1;
+            }
+
+            gfx[x + xline + ((y + yline) * 64)] ^= 1;
+          }
+        }
+      }
+      draw_flag = 1;
+      pc += 2;
+      break;
+      }
+
+    default:
+      printf("%s: Opcode 0x%x not yet implemented\n", __FILE__, opcode);
+  }
+
+  if (delay_timer > 0)
+    delay_timer--;
+  
+  if (sound_timer > 0) {
+    if (sound_timer == 1) {
+      printf("BEEP\n");
+    }
+    sound_timer--;
+  }
+}
