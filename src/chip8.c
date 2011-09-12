@@ -24,7 +24,7 @@ void chip8_init() {
   sound_timer = 0;
 
   // read in font set
-  memread(&memory[FONT_START_ADDR], "fontset.bin");
+  memread(&memory[FONT_START_ADDR], "data/fontset.bin");
 }
 
 void load_rom(const char* file) {

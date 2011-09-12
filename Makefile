@@ -18,7 +18,7 @@ include $(DEVKITXENON)/rules
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	bin
 SOURCES		:=	src
-DATA		:=	data  
+DATA		:=	
 INCLUDES	:= /usr/local/xenon/usr/include
 
 #---------------------------------------------------------------------------------
