@@ -28,7 +28,7 @@ int main(void) {
     SDL_Quit();
     return -1;
   }
-
+  SDL_Flip(screen);
   console_init();
   printf("Hello, world!\n");
 
