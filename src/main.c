@@ -47,7 +47,7 @@ void main_loop() {
       delta = 0.0016f;
 
     while (SDL_PollEvent(&event)) {
-      HandleEvent(event, delta);
+      //      HandleEvent(event, delta);
     }
 
     accumulator += delta;

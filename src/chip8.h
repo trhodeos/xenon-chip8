@@ -60,6 +60,7 @@ byte draw_flag;
 // function declarations
 // -----------------------------------------------
 void chip8_init();
+void emulate_cycle();
 void load_rom(const char* file);
 
 
