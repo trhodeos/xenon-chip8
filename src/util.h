@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-void memread(byte* dest, const char* file);
+void read_into_mem(byte* dest, const char* file);
 
 #endif // UTIL_H

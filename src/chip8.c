@@ -26,11 +26,11 @@ void chip8_init() {
   sound_timer = 0;
 
   // read in font set
-  memread(&memory[FONT_START_ADDR], "uda:/data/fontset.bin");
+  read_into_mem(&memory[FONT_START_ADDR], "uda:/data/fontset.bin");
 }
 
 void load_rom(const char* file) {
-  memread(&memory[PROGRAM_START_ADDR], file);
+  read_into_mem(&memory[PROGRAM_START_ADDR], file);
 }
 
 int poll_input() {

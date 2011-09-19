@@ -18,7 +18,10 @@
 // other constants
 // -----------------------------------------------
 
-#define FONT_DIGIT_WIDTH 0x0005
+#define FONT_DIGIT_WIDTH 0x5
+
+#define GFX_HEIGHT 64
+#define GFX_WIDTH 32
 // -----------------------------------------------
 // system
 // -----------------------------------------------
@@ -27,7 +30,7 @@
 byte memory[4096];
 
 // graphics
-byte gfx[64 * 32];
+byte gfx[GFX_HEIGHT * GFX_WIDTH];
 
 // 15 8-bit general purpose registers
 // 16th register is used for carry-flag

@@ -3,10 +3,15 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void memread(byte* dest, const char* file) {
+void read_into_mem(byte* dest, const char* file) {
   byte cur;
   FILE *fp = NULL;
   int i;
+
+  if (!dest) {
+    printf("%s: Cannot write to null buffer!\n", __FILE__);
+    return;
+  }
 
   if (!file) {
     printf("%s: Cannot open null file!\n", __FILE__);
