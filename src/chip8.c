@@ -34,6 +34,7 @@ void load_rom(const char* file) {
 }
 
 int poll_input() {
+  // TODO
   return 0;
 }
 
