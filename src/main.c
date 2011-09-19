@@ -1,3 +1,5 @@
+#include "chip8.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -18,20 +20,25 @@ void sysconf(){
 
 int main(void) {
 
-  SDL_Surface *screen;
+  //  SDL_Surface *screen;
 
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+  /*  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     return -1;
-  }
+    }*/
 
-  if (!(screen = SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_FULLSCREEN|SDL_HWSURFACE))) {
+  /*  if (!(screen = SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_FULLSCREEN|SDL_HWSURFACE))) {
     SDL_Quit();
     return -1;
-  }
-  SDL_Flip(screen);
+    }
+    SDL_Flip(screen);*/
+  xenos_init(VIDEO_MODE_AUTO);
   console_init();
+  
+
+  chip8_init();
+  load_rom("sda:/data/");
   printf("Hello, world!\n");
 
-  SDL_Quit();
+  //  SDL_Quit();
   return 0;
 }

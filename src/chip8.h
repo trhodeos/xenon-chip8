@@ -13,6 +13,12 @@
 #define INTERPRETER_END_ADDR 0x1ff
 #define PROGRAM_START_ADDR 0x200
 
+
+// -----------------------------------------------
+// other constants
+// -----------------------------------------------
+
+#define FONT_DIGIT_WIDTH 0x0005
 // -----------------------------------------------
 // system
 // -----------------------------------------------
@@ -54,6 +60,7 @@ byte draw_flag;
 // function declarations
 // -----------------------------------------------
 void chip8_init();
+void load_rom(const char* file);
 
 
 #endif // CHIP8_H

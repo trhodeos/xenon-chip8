@@ -1,17 +1,18 @@
 #include "util.h"
 
 #include <stdio.h>
+#include <unistd.h>
 
 void memread(byte* dest, const char* file) {
   byte cur;
-  FILE *fp;
+  FILE *fp = NULL;
   int i;
 
   if (!file) {
-    printf("%s: Cannot open null file!\n",__FILE__);
+    printf("%s: Cannot open null file!\n", __FILE__);
     return;
   }
-  
+
   fp = fopen(file, "rb");
   if (!fp) {
     printf("%s: Problem opening file %s.\n", __FILE__, file);
@@ -20,12 +21,12 @@ void memread(byte* dest, const char* file) {
 
   i = 0;
   cur = 0;
-  do {
+  while (!feof(fp)) {
     cur = fgetc(fp);
     dest[i] = cur;
     i++;
-  } while (cur != EOF);
+  }
   
   fclose(fp);
-  fp = 0;
+  fp = NULL;
 }
