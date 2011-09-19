@@ -278,9 +278,7 @@ void emulate_cycle() {
     delay_timer--;
   
   if (sound_timer > 0) {
-    if (sound_timer == 1) {
-      //      printf("BEEP\n");
-    }
+    printf("BEEP\n");
     sound_timer--;
   }
 }
