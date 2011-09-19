@@ -14,7 +14,7 @@ void chip8_init() {
   memset(gfx, 0, sizeof(gfx));
   memset(V, 0, sizeof(V));
 
-  I = 0x000;
+  I = 0x0000;
   pc = PROGRAM_START_ADDR; // always the first instruction location
 
   memset(stack, 0, sizeof(stack));
@@ -26,7 +26,7 @@ void chip8_init() {
   sound_timer = 0;
 
   // read in font set
-  memread(&memory[FONT_START_ADDR], "data/fontset.bin");
+  memread(&memory[FONT_START_ADDR], "uda:/data/fontset.bin");
 }
 
 void load_rom(const char* file) {
@@ -278,7 +278,7 @@ void emulate_cycle() {
     delay_timer--;
   
   if (sound_timer > 0) {
-    printf("BEEP\n");
+    //    printf("BEEP\n");
     sound_timer--;
   }
 }

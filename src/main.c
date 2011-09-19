@@ -6,8 +6,9 @@
 #include <string.h>
 #include <xenos/xenos.h>
 #include <console/console.h>
-
-#include <SDL/SDL.h>
+#include <usb/usbmain.h>
+#include <ppc/timebase.h>
+//#include <SDL/SDL.h>
 
 #define WIDTH  640
 #define HEIGHT 480
@@ -24,31 +25,52 @@ void sysconf(){
 }
 
 void render() {
-  // TODO
+  int i, j, k;
+  byte temp;
+  if (draw_flag) {
+    console_clrscr();
+    for (i = 0; i < GFX_HEIGHT; i++) {
+      for (j = 0; j < GFX_WIDTH; j++) {
+        temp = gfx[i*GFX_WIDTH + j];
+        for (k = 0; k < 8; k++) {
+          if (temp & 0x80) 
+            printf("*");
+          else
+            printf(" ");
+          temp = temp << 1;
+        }
+      }
+      printf("\n");
+    }
+    draw_flag = 0;
+  }
 }
 
 void main_loop() {
   double accumulator;
-  float delta, current_time, last_time;
-  SDL_Event event;
+  double delta;
+  uint64_t current_time, last_time;
+  //  SDL_Event event;
+
+  printf("starting main loop\n");
 
   accumulator = 0;
   is_running = 1;
   
-  last_time = SDL_GetTicks();
+  last_time = mftb();
   while (is_running) {
-    current_time = SDL_GetTicks();
+    current_time = mftb();
     // delta in seconds, not ms
-    delta = (current_time - last_time) / 1000;
+    delta = tb_diff_msec(current_time, last_time) / 1000.0;
     last_time = current_time;
 
     // hack to allow response to breakpoints/halted execution
-    if (delta > 1.0f)
-      delta = 0.0016f;
-
-    while (SDL_PollEvent(&event)) {
+    //    if (delta > 1.0f)
+    //      delta = 0.0016f;
+    //    printf("%f\n", delta);
+    //    while (SDL_PollEvent(&event)) {
       //      HandleEvent(event, delta);
-    }
+    //    }
 
     accumulator += delta;
     if (accumulator > UPDATE_STEP)
@@ -64,28 +86,33 @@ void main_loop() {
 
 int main() {
 
-  SDL_Surface *screen;
+  //SDL_Surface *screen;
 
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    return -1;
-  }
+  //  if (SDL_Init(SDL_INIT_TIMER) < 0) {
+  //    return -1;
+  //  }
 
-  if (!(screen = SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_FULLSCREEN|SDL_HWSURFACE))) {
+  /*  if (!(screen = SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_FULLSCREEN|SDL_HWSURFACE))) {
     SDL_Quit();
     return -1;
-  }
+    }*/
   
   // clear out garbage
-  SDL_Flip(screen);
+  //  SDL_Flip(screen);
 
   xenos_init(VIDEO_MODE_AUTO);
+  
+  usb_init();
+  usb_do_poll();
+
   console_init();  
 
   chip8_init();
-  //  load_rom("sda:/data/");
-
+  printf("done initializing\n");
+  load_rom("uda:/data/pong.ch8");
+  printf("done loading rom\n");
   main_loop();
 
-  SDL_Quit();
+  //  SDL_Quit();
   return 0;
 }
