@@ -41,7 +41,7 @@ void emulate_cycle() {
 
   ushort x, y, height, pixel, xline, yline;
   int reg_x, reg_y, address, value, i, temp;
-  // Fetch
+
   // opcodes are 2 bytes, not 1
   ushort opcode = memory[pc] << 8 | memory[pc+1];
 
@@ -127,36 +127,38 @@ void emulate_cycle() {
           break;
         case 0x0004: // 0x8XY4: Add
           if ((int)(V[reg_x] + V[reg_y]) > 255) {
-            V[15] = 1;
+            V[0xF] = 1;
+          } else {
+            V[0xF] = 0;
           }
           V[reg_x] += V[reg_y];
           pc += 2;
           break;
         case 0x0005: // 0x8XY5: Subtract
           if (V[reg_x] > V[reg_y]) {
-            V[15] = 1;
+            V[0xF] = 1;
           } else {
-            V[15] = 0;
+            V[0xF] = 0;
           }
           V[reg_x] -= V[reg_y];
           pc += 2;
           break;
         case 0x0006: // 0x8XY6: Shift right
-          V[15] = (opcode & 0x0001);
+          V[0xF] = (opcode & 0x0001);
           V[reg_x] = V[reg_x] >> 1;
           pc += 2;
           break;
         case 0x0007: // 0x8XY7: Subtract from y
           if (V[reg_x] < V[reg_y]) {
-            V[15] = 1;
+            V[0xF] = 1;
           } else {
-            V[15] = 0;
+            V[0xF] = 0;
           }
           V[reg_x] = V[reg_y] - V[reg_x];
           pc += 2;
           break;
         case 0x000E: // 0x8XYE: Shift left
-          V[15] = (opcode & 0x8000) >> 15;
+          V[0xF] = (opcode & 0x8000) >> 15;
           V[reg_x] = V[reg_x] << 1;
           pc += 2;
           break;
@@ -194,7 +196,7 @@ void emulate_cycle() {
               V[0xF] = 1;
             }
 
-            gfx[x + xline + ((y + yline) * 64)] ^= 1;
+            gfx[x + xline + ((y + yline) * 64)] ^= 0x1;
           }
         }
       }
