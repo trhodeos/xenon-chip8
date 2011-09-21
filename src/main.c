@@ -8,6 +8,7 @@
 #include <console/console.h>
 #include <usb/usbmain.h>
 #include <SDL/SDL.h>
+#include <time/time.h>
 
 #define WIDTH  640
 #define HEIGHT 480
@@ -17,20 +18,54 @@
 #define UPDATE_STEP (1.0/60)
 
 int is_running = 0;
+SDL_Surface *screen;
 
 // hack needed by SDL
 void sysconf(){
   /* empty */
 }
+void set_pixel(SDL_Surface *screen, int x, int y, Uint8 r, Uint8 g, Uint8 b)
+{
+  Uint32 *pixmem32;
+  Uint32 colour;  
+ 
+  colour = SDL_MapRGB( screen->format, r, g, b );
+  
+  pixmem32 = (Uint32*) screen->pixels  + y + x;
+  *pixmem32 = colour;
+}
 
-void render() {
-  // TODO
+void render(SDL_Surface *screen) {
+  int i, j, k;
+  byte temp;
+  if (SDL_MUSTLOCK(screen)) {
+    if (SDL_LockSurface(screen) < 0) {
+      return;
+    }
+  }
+
+  for (i = 0; i < GFX_HEIGHT; i++) {
+    for (j = 0; j < GFX_WIDTH; j++) {
+      temp = gfx[i*GFX_WIDTH + j];
+      if (temp) {
+        set_pixel(screen, j*8 + k, i, 0xFF, 0xFF, 0xFF);
+      } else {
+        set_pixel(screen, j*8 + k, i, 0x00, 0x00, 0x00);
+      }
+    }
+  }
+
+  if ( SDL_MUSTLOCK(screen) ) {
+    SDL_UnlockSurface(screen);
+  }
+  SDL_UpdateRect(screen, 0, 0, GFX_WIDTH, GFX_HEIGHT);
+  SDL_Flip(screen);
 }
 
 void main_loop() {
   double accumulator;
   double delta;
-  double current_time, last_time;
+  time_t current_time, last_time;
   SDL_Event event;
 
   printf("starting main loop\n");
@@ -38,9 +73,9 @@ void main_loop() {
   accumulator = 0;
   is_running = 1;
   
-  last_time = SDL_GetTicks();
+  last_time = time();//SDL_GetTicks();
   while (is_running) {
-    current_time = SDL_GetTicks();
+    current_time = time();
     // delta in seconds, not ms
     delta = (current_time - last_time) / 1000.0;
     last_time = current_time;
@@ -57,7 +92,7 @@ void main_loop() {
     if (accumulator > UPDATE_STEP)
     {
       emulate_cycle();
-      render();
+      render(screen);
 
       accumulator -= UPDATE_STEP;
     }
@@ -67,9 +102,8 @@ void main_loop() {
 
 int main() {
 
-  SDL_Surface *screen;
 
-  if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     return -1;
   }
 
@@ -81,7 +115,7 @@ int main() {
   // clear out garbage
   SDL_Flip(screen);
 
-  //  xenos_init(VIDEO_MODE_AUTO);
+  xenos_init(VIDEO_MODE_AUTO);
   
   usb_init();
   usb_do_poll();
